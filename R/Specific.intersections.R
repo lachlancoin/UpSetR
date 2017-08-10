@@ -4,11 +4,16 @@ specific_intersections <- function(data, first.col, last.col, intersections, ord
   keep <- unique(unlist(intersections))
   remove <- sets[which(!sets %in% keep)]
   remove <- which(names(data) %in% remove)
+ remove = c()
   if(length(remove) != 0){
     data <- data[-remove]
   }
+  
+  
   data <- count(data[keep])
+	
   sets <- names(data[1:length(keep)])
+  #print(data)
   data <- lapply(intersections, function(x){
     temp_sets <- unlist(x)
     x <- data[which(rowSums(data[1:length(keep)]) == length(temp_sets)), ]
@@ -20,6 +25,15 @@ specific_intersections <- function(data, first.col, last.col, intersections, ord
       x[ ,which(names %in% temp_sets)] <- 1
     }
     x <- x
+    inds = which(names(data) %in% temp_sets)
+ # print('h1')
+ 
+   inds1 = apply(data[,inds,drop=F],1,min)
+  #print(inds1)
+#	 print(data[inds1==1,])
+   
+   x[length(x)] = sum(data$freq[inds1==1])
+	 print(x)
   })
   
   Freqs <- data.frame()
