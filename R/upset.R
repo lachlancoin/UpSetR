@@ -210,6 +210,7 @@ upset <- function(data, nsets = 5, nintersects = 40, sets = NULL, keep.order = F
   }
   if(is.null(queries) == F){
     Intersection <- SeperateQueries(queries, 1, palette)
+   
     Matrix_col <- intersects(QuerieInterData, Intersection, New_data, first.col, Num_of_set,
                              All_Freqs, expression, Set_names, palette)
     Element <- SeperateQueries(queries, 1, palette)

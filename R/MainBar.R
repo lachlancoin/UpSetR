@@ -11,7 +11,9 @@ Counter <- function(data, num_sets, start_col, name_of_sets, nintersections, mba
   for( i in 1:num_sets){
     temp_data[i] <- match(name_of_sets[i], colnames(data))
   }
-  Freqs <- data.frame(count(data[ ,as.integer(temp_data)]))
+ 
+  Freqs <- data.frame(mergeAll(count(data[ ,as.integer(temp_data)])))
+  
   colnames(Freqs)[1:num_sets] <- name_of_sets
   #Adds on empty intersections if option is selected
   if(is.null(empty_intersects) == F){
@@ -22,6 +24,7 @@ Counter <- function(data, num_sets, start_col, name_of_sets, nintersections, mba
     all <- rbind(Freqs, empty)
     Freqs <- data.frame(all[!duplicated(all[1:num_sets]), ], check.names = F)
   }
+ 
   #Remove universal empty set
   Freqs <- Freqs[!(rowSums(Freqs[ ,1:num_sets]) == 0), ]
   #Aggregation by degree
@@ -59,6 +62,15 @@ Counter <- function(data, num_sets, start_col, name_of_sets, nintersections, mba
   return(Freqs)
 }
 
+mergeC <-function(inds, dat){
+ inds1 = apply(dat[,which(inds==1),drop=F],1,min)
+ sum(dat$freq[inds1==1])
+}
+mergeAll<-function(dat){
+freq = apply(dat[,-dim(dat)[2]],1,mergeC,dat)
+dat$freq = freq
+dat
+}
 ## Generate main bar plot
 Make_main_bar <- function(Main_bar_data, Q, show_num, ratios, customQ, number_angles,
                           ebar, ylabel, ymax, scale_intersections, text_scale, attribute_plots){
